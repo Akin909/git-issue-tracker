@@ -23,7 +23,7 @@ let make = _children => {
     Js.Promise.(
       Fetch.fetch("https://api.github.com/onivim/oni")
       |> then_(Fetch.Response.json)
-      |> then_(json => print_endline(json) |> resolve)
+      |> then_(json => parseRepoJson(json) |> resolve)
     ),
   render: _self =>
     <div className="container">
