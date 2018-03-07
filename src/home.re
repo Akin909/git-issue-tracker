@@ -16,5 +16,6 @@ let make = _children => {
     <div className="container">
       <Title text="Git Issue Tracker" />
       <Issues />
+      <Login />
     </div>
 };
