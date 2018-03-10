@@ -3,24 +3,15 @@ open Utils;
 type action =
   | ReposFetched(repo)
   | URLChanged(string)
-  | FetchRepos(string)
+  | FetchRepos
   | ReposFetchFailed(string);
 
 type state =
   | Loading
   | Loaded(repo)
-  | Error(string)
-  | Authenticated(string);
+  | Error(string);
 
 let component = ReasonReact.reducerComponent("Home");
-
-let defaultHeaders = [%bs.raw {|
-{
-  username: "Akin909",
-}
-|}];
-
-let headers = Fetch.HeadersInit.make(defaultHeaders);
 
 let make = _children => {
   ...component,
@@ -38,14 +29,14 @@ let make = _children => {
   ],
   reducer: (action, _state) =>
     switch action {
-    | FetchRepos(_code) =>
+    | FetchRepos =>
       ReasonReact.UpdateWithSideEffects(
         Loading,
         (
           self =>
             Js.Promise.
               (
-                Fetch.fetch("https://api.github.com/onivim/oni")
+                Fetch.fetch(repoUrl ++ repoOfChoice)
                 |> then_(Fetch.Response.json)
                 |> then_(json =>
                      json
@@ -70,12 +61,13 @@ let make = _children => {
       )
     | ReposFetched(repo) => ReasonReact.Update(Loaded(repo))
     | ReposFetchFailed(error) => ReasonReact.Update(Error(error))
-    | URLChanged(code) => ReasonReact.Update(Authenticated(code))
+    | URLChanged(url) => {
+        let () = Js.log (url);
+          ReasonReact.NoUpdate;
+      }
     },
   didMount: self => {
-    let url = ReasonReact.Router.dangerouslyGetInitialUrl();
-    let code = Js.String.split("=", url.search)[1];
-    self.send(FetchRepos(code));
+    self.send(FetchRepos);
     ReasonReact.NoUpdate;
   },
   render: ({ state }) => {
@@ -85,7 +77,6 @@ let make = _children => {
         | Loading => <div> (textEl("Loading...")) </div>
         | Error(error) => <div className="error"> (textEl(error)) </div>
         | Loaded(repo) => <Tile repo />
-        | Authenticated(code) => <div>(textEl(code))</div>
         }
     }
     </div>
