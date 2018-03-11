@@ -36,7 +36,7 @@ body,
 
 .container {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,20 +54,34 @@ body,
   color: sienna;
 }
 
-.auth__button {
+.button {
   border-radius: 4px;
   box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.5);
-  height: 8rem;
   width: auto;
-  padding: 2rem;
+  padding: 0.5rem;
   text-decoration: none;
   color: black;
+  font-size: 1.2rem;
+}
+
+.button:focus {
+  outline: 3px dashed #ccc;
+}
+
+.button-small {
+  height: 3rem;
+}
+
+.title {
+  text-align: center;
+  text-decoration: underline;
   font-size: 1.5rem;
+  font-weight: bolder;
 }
 
 .main__content {
   width: 100%;
-  height: 50%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -76,14 +90,16 @@ body,
 
 .tile__container {
   width: 50%;
-  height: 50%;
+  min-height: 50%;
   padding: 2rem;
   border-radius: 5px;
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.5);
+  margin: 1rem;
 }
 
 .tile__content {
   background-color: whitesmoke;
+  padding: 1rem;
   width: 100%;
   height: 100%;
   display: flex;
@@ -92,8 +108,56 @@ body,
   justify-content: center;
 }
 
+.tile__content__label {
+  color: rebeccapurple;
+  font-weight: bolder;
+}
+
 .tile__content__row {
   width: 100%;
   padding: 0.5rem;
   font-size: 1.2rem;
+  margin: 0 0.2rem;
 }
+
+.issue__container {
+  width: 80%;
+  margin: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  list-style-type: none;
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+}
+
+.issue__list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.issue__title {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.issue__number {
+  display: flex;
+}
+
+.issue__content__container {
+  display: flex;
+  flex-direction: row;
+}
+
+.issue__content__text {
+  width: 90%;
+  white-space: pre-wrap;
+}
+

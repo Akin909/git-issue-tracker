@@ -1,5 +1,7 @@
 let textEl = ReasonReact.stringToElement;
+
 let repoUrl = "https://api.github.com/repos/";
+
 let repoOfChoice = "onivim/oni";
 
 type repo = {
@@ -7,7 +9,7 @@ type repo = {
   stargazers_count: option(int),
   html_url: string,
   description: option(string),
-  fork: option(string),
+  fork: bool,
   url: string,
   archive_url: string,
   assignees_url: string,
@@ -42,12 +44,18 @@ type repo = {
   topics: option(string)
 };
 
+type issue = {
+  title: string,
+  number: int,
+  body: string
+};
+
 let parseRepoJson = json : repo =>
   Json.Decode.{
     full_name: json |> field("full_name", string),
     stargazers_count: json |> optional(field("stargazers_count", int)),
     description: json |> optional(field("description", string)),
-    fork: json |> optional(field("fork", string)),
+    fork: json |> field("fork", bool),
     url: json |> field("url", string),
     html_url: json |> field("html_url", string),
     archive_url: json |> field("archive_url", string),
@@ -80,13 +88,28 @@ let parseRepoJson = json : repo =>
     size: json |> field("size", int),
     default_branch: json |> field("default_branch", string),
     open_issues_count: json |> field("open_issues_count", int),
-    topics: json |> optional(field("topics", string)),
-};
+    topics: json |> optional(field("topics", string))
+  };
 
-let fetchIssues = (url: string) =>
-  Js.Promise.(
-    Fetch.fetch(url)
-    |> then_(Fetch.Response.json)
-    |> then_(json => parseRepoJson(json) |> resolve)
-    |> resolve
-  );
+let parseIssuesJson = json : array(issue) =>
+  json
+  |> Json.Decode.array(json =>
+       Json.Decode.{
+         title: json |> field("title", string),
+         number: json |> field("number", int),
+         body: json |> field("body", string)
+       }
+     );
+/* let fetchIssues = (url: string, callback) =>
+   Js.Promise.(
+     Fetch.fetch(url)
+     |> then_(Fetch.Response.json)
+     |> then_(json =>
+     json
+     |> parseIssuesJson
+     |> Array.to_list
+     |> (issues => callback(issues))
+     |> resolve
+     )
+     |> ignore
+     ); */
