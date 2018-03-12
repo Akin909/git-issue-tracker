@@ -9,9 +9,9 @@ let component = ReasonReact.reducerComponent("Issue");
 
 let make = (~issue, _children) => {
   ...component,
-  initialState: () => {show: false},
+  initialState: () => {show: true},
   reducer: (action, state) =>
-    switch action {
+    switch (action) {
     | Click => ReasonReact.Update({show: ! state.show})
     },
   render: ({send, state}) =>
@@ -37,7 +37,7 @@ let make = (~issue, _children) => {
           |> ReasonReact.arrayToElement
         )
       </div>
-      <div className="issue__content__container" onClick=(_evt => send(Click))>
+      <div className="issue__content__container">
         <div
           className="issue__content__text"
           dangerouslySetInnerHTML=(
@@ -58,7 +58,8 @@ let make = (~issue, _children) => {
           <button className="button button--small">
             (textEl("Comments"))
           </button>
-          <button className="button button--small">
+          <button
+            className="button button--small" onClick=(_evt => send(Click))>
             (textEl(state.show ? "Collapse" : "Expand"))
           </button>
         </section>

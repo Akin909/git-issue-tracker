@@ -11,19 +11,20 @@ let repoOfChoice = "onivim/oni";
 [@bs.val] [@bs.module "marked"] external sync : string => string = "";
 
 [@bs.send] [@bs.return nullable]
-external getAttribute : (Js.t('a), string) => option(string) = "getAttribute";
+external getAttribute : (Js.t('a), string) => option(string) =
+  "getAttribute";
 
 let dangerousHtml: string => Js.t('a) = html => {"__html": html};
 
 type label = {
   name: string,
-  color: string
+  color: string,
 };
 
 type user = {
   id: int,
   login: string,
-  avatar_url: string
+  avatar_url: string,
 };
 
 type issue = {
@@ -31,7 +32,7 @@ type issue = {
   number: int,
   body: string,
   labels: array(label),
-  user
+  user,
 };
 
 type repo = {
@@ -71,7 +72,7 @@ type repo = {
   size: int,
   default_branch: string,
   open_issues_count: int,
-  topics: option(string)
+  topics: option(string),
 };
 
 let parseRepoJson = json : repo =>
@@ -112,7 +113,7 @@ let parseRepoJson = json : repo =>
     size: json |> field("size", int),
     default_branch: json |> field("default_branch", string),
     open_issues_count: json |> field("open_issues_count", int),
-    topics: json |> optional(field("topics", string))
+    topics: json |> optional(field("topics", string)),
   };
 
 let parseIssueLabels = json : array(label) =>
@@ -120,7 +121,7 @@ let parseIssueLabels = json : array(label) =>
   |> Json.Decode.array(json =>
        Json.Decode.{
          color: json |> field("color", string),
-         name: json |> field("name", string)
+         name: json |> field("name", string),
        }
      );
 
@@ -128,7 +129,7 @@ let parseUser = json : user =>
   Json.Decode.{
     login: json |> field("login", string),
     avatar_url: json |> field("avatar_url", string),
-    id: json |> field("id", int)
+    id: json |> field("id", int),
   };
 
 let parseIssuesJson = json : array(issue) =>
@@ -139,19 +140,6 @@ let parseIssuesJson = json : array(issue) =>
          number: json |> field("number", int),
          body: json |> field("body", string),
          labels: json |> field("labels", parseIssueLabels),
-         user: json |> field("user", parseUser)
+         user: json |> field("user", parseUser),
        }
      );
-/* let fetchIssues = (url: string, callback) =>
-   Js.Promise.(
-     Fetch.fetch(url)
-     |> then_(Fetch.Response.json)
-     |> then_(json =>
-     json
-     |> parseIssuesJson
-     |> Array.to_list
-     |> (issues => callback(issues))
-     |> resolve
-     )
-     |> ignore
-     ); */
