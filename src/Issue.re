@@ -22,13 +22,46 @@ let make = (~issue, _children) => {
           (textEl("#" ++ string_of_int(issue.number)))
         </span>
       </h2>
+      <div className="issue__label__container">
+        (
+          Array.map(
+            label =>
+              <div
+                key=label.name
+                className="issue__label"
+                style=(style(~backgroundColor="#" ++ label.color, ()))>
+                (textEl(String.capitalize(label.name)))
+              </div>,
+            issue.labels
+          )
+          |> ReasonReact.arrayToElement
+        )
+      </div>
       <div className="issue__content__container" onClick=(_evt => send(Click))>
-        <p className="issue__content__text">
-          (state.show ? textEl(issue.body) : ReasonReact.nullElement)
-        </p>
-        <button className="button button-small button-bottom">
-          (textEl(state.show ? "Collapse" : "Expand"))
-        </button>
+        <div
+          className="issue__content__text"
+          dangerouslySetInnerHTML=(
+            dangerousHtml(state.show ? marked(issue.body) : "")
+          )
+        />
+        <section className="issue__content__sidebar">
+          <figure>
+            <img
+              src=issue.user.avatar_url
+              alt="user profile"
+              className="image image--github image--relative"
+            />
+            <figcaption className="issue__username">
+              (textEl(issue.user.login))
+            </figcaption>
+          </figure>
+          <button className="button button--small">
+            (textEl("Comments"))
+          </button>
+          <button className="button button--small">
+            (textEl(state.show ? "Collapse" : "Expand"))
+          </button>
+        </section>
       </div>
     </li>
 };

@@ -6,6 +6,7 @@
     "@glennsl/bs-json": "^1.1.2",
     "bs-fetch": "^0.2.1",
     "bs-json": "^1.0.1",
+    "marked": "^0.3.17",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "reason-scripts": "0.8.0"

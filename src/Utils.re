@@ -1,8 +1,38 @@
 let textEl = ReasonReact.stringToElement;
 
+let style = ReactDOMRe.Style.make;
+
 let repoUrl = "https://api.github.com/repos/";
 
 let repoOfChoice = "onivim/oni";
+
+[@bs.module] external marked : string => string = "";
+
+[@bs.val] [@bs.module "marked"] external sync : string => string = "";
+
+[@bs.send] [@bs.return nullable]
+external getAttribute : (Js.t('a), string) => option(string) = "getAttribute";
+
+let dangerousHtml: string => Js.t('a) = html => {"__html": html};
+
+type label = {
+  name: string,
+  color: string
+};
+
+type user = {
+  id: int,
+  login: string,
+  avatar_url: string
+};
+
+type issue = {
+  title: string,
+  number: int,
+  body: string,
+  labels: array(label),
+  user
+};
 
 type repo = {
   full_name: string,
@@ -42,12 +72,6 @@ type repo = {
   default_branch: string,
   open_issues_count: int,
   topics: option(string)
-};
-
-type issue = {
-  title: string,
-  number: int,
-  body: string
 };
 
 let parseRepoJson = json : repo =>
@@ -91,13 +115,31 @@ let parseRepoJson = json : repo =>
     topics: json |> optional(field("topics", string))
   };
 
+let parseIssueLabels = json : array(label) =>
+  json
+  |> Json.Decode.array(json =>
+       Json.Decode.{
+         color: json |> field("color", string),
+         name: json |> field("name", string)
+       }
+     );
+
+let parseUser = json : user =>
+  Json.Decode.{
+    login: json |> field("login", string),
+    avatar_url: json |> field("avatar_url", string),
+    id: json |> field("id", int)
+  };
+
 let parseIssuesJson = json : array(issue) =>
   json
   |> Json.Decode.array(json =>
        Json.Decode.{
          title: json |> field("title", string),
          number: json |> field("number", int),
-         body: json |> field("body", string)
+         body: json |> field("body", string),
+         labels: json |> field("labels", parseIssueLabels),
+         user: json |> field("user", parseUser)
        }
      );
 /* let fetchIssues = (url: string, callback) =>

@@ -3,10 +3,12 @@ open Utils;
 type action =
   | FetchRepos
   | FetchIssues
+  | FetchCommentDetails(string)
   | FetchedIssues(list(issue))
   | ReposFetched(repo)
   | URLChanged(string)
-  | ReposFetchFailed(string);
+  | ReposFetchFailed(string)
+  | FetchError(string);
 
 type remote =
   | Loading
@@ -20,12 +22,27 @@ type state = {
   repo: remote
 };
 
+let fetchCommentsById = (evt: ReactEventRe.Mouse.t) => {
+  let id =
+    getAttribute(
+      ReactDOMRe.domElementToObj(ReactEventRe.Mouse.currentTarget(evt)),
+      "id"
+    );
+  switch id {
+  | Some(id) => FetchCommentDetails(id)
+  | None => FetchError("Failed to fetch comments as no Id was passed")
+  };
+};
+
 let renderIssues = (issues: option(list(issue))) =>
   <ul className="issue__list">
     (
       switch issues {
       | Some(issues) =>
-        List.map(issue => <Issue key=string_of_int(issue.number) issue />, issues)
+        List.map(
+          issue => <Issue key=(string_of_int(issue.number)) issue />,
+          issues
+        )
         |> Array.of_list
         |> ReasonReact.arrayToElement
       | None => ReasonReact.nullElement
@@ -98,6 +115,7 @@ let make = _children => {
             )
         )
       )
+    /* | FetchCommentDetails(id) => ReasonReact.UpdateWithSideEffects({ ...state, loading: true }, (self) => ) */
     | ReposFetched(repo) =>
       ReasonReact.Update({...state, repo: Loaded(repo), loading: false})
     | ReposFetchFailed(error) =>
