@@ -28,6 +28,7 @@ body,
 #root {
   width: 100%;
   height: 100%;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 }
 
 * {
@@ -45,8 +46,9 @@ body,
 
 .title {
   width: 50%;
-  font-size: 3rem;
+  font-size: 5rem;
   text-align: center;
+  text-decoration: none;
 }
 
 .error {
@@ -70,6 +72,10 @@ body,
 
 .button-small {
   height: 3rem;
+}
+
+.button-bottom {
+  align-self: flex-end;
 }
 
 .title {
@@ -96,6 +102,7 @@ body,
   border-radius: 5px;
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.5);
   margin: 1rem;
+  background: #FFF;
 }
 
 .tile__content {
@@ -161,6 +168,8 @@ body,
 
 .issue__content__text {
   width: 90%;
+  margin-right: 1rem;
   white-space: pre-wrap;
+  word-break: break-word;
 }
 

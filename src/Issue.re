@@ -26,7 +26,7 @@ let make = (~issue, _children) => {
         <p className="issue__content__text">
           (state.show ? textEl(issue.body) : ReasonReact.nullElement)
         </p>
-        <button className="button button-small">
+        <button className="button button-small button-bottom">
           (textEl(state.show ? "Collapse" : "Expand"))
         </button>
       </div>
